@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Student {
+  id           String          @id @default(uuid())
+  name         String
+  rollNumber   String          @unique
+  email        String          @unique
+  password     String
+  room         String
+  block        String
+  qrCodeHash   String          @unique
+  dietaryFlags String   @default("[]")
+  messActive   Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  votes        Vote[]
+  entries      Entry[]
+  queueEntries LeftoverQueue[]
+  ratings      MealRating[]
+  noShows      NoShow[]
+}
+
+model Meal {
+  id              String          @id @default(uuid())
+  date            DateTime
+  mealType        String
+  menuItems       String
+  voteDeadline    DateTime
+  mainStartTime   DateTime
+  mainEndTime     DateTime
+  leftoverEndTime DateTime
+  status          String          @default("upcoming")
+  votes           Vote[]
+  entries         Entry[]
+  queueEntries    LeftoverQueue[]
+  ratings         MealRating[]
+  wasteLog        WasteLog?
+}
+
+model Vote {
+  id        String   @id @default(uuid())
+  studentId String
+  mealId    String
+  vote      String
+  votedAt   DateTime @default(now())
+  isLocked  Boolean  @default(false)
+  student   Student  @relation(fields: [studentId], references: [id])
+  meal      Meal     @relation(fields: [mealId], references: [id])
+
+  @@unique([studentId, mealId])
+}
+
+model Entry {
+  id        String   @id @default(uuid())
+  studentId String
+  mealId    String
+  entryType String
+  scannedAt DateTime @default(now())
+  student   Student  @relation(fields: [studentId], references: [id])
+  meal      Meal     @relation(fields: [mealId], references: [id])
+}
+
+model LeftoverQueue {
+  id        String    @id @default(uuid())
+  studentId String
+  mealId    String
+  joinedAt  DateTime  @default(now())
+  entered   Boolean   @default(false)
+  enteredAt DateTime?
+  student   Student   @relation(fields: [studentId], references: [id])
+  meal      Meal      @relation(fields: [mealId], references: [id])
+}
+
+model MealRating {
+  id          String   @id @default(uuid())
+  studentId   String
+  mealId      String
+  stars       Int
+  comment     String?
+  submittedAt DateTime @default(now())
+  student     Student  @relation(fields: [studentId], references: [id])
+  meal        Meal     @relation(fields: [mealId], references: [id])
+
+  @@unique([studentId, mealId])
+}
+
+model NoShow {
+  id          String   @id @default(uuid())
+  studentId   String
+  mealId      String
+  strikeCount Int      @default(1)
+  loggedAt    DateTime @default(now())
+  student     Student  @relation(fields: [studentId], references: [id])
+}
+
+model WasteLog {
+  id                String @id @default(uuid())
+  mealId            String @unique
+  estimatedServings Int
+  actualServed      Int
+  leftoverServings  Int
+  donatedServings   Int    @default(0)
+  wastedKg          Float  @default(0)
+  meal              Meal   @relation(fields: [mealId], references: [id])
+}
