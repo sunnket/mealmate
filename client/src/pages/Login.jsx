@@ -191,7 +191,7 @@ export default function Login() {
 
               <div className="pt-3 border-t border-white/[0.05] text-center">
                 <p className="text-[11px] text-white/22">
-                  Demo — {role === 'student' ? '21CS101 / test1234' : `${role} / ${role}1234`}
+                  Demo — {role === 'student' ? '21CS101 / 12345' : '12345 / 12345'}
                 </p>
               </div>
             </div>

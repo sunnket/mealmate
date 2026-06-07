@@ -18,7 +18,7 @@ async function main() {
   await prisma.student.deleteMany();
 
   // Create 5 students
-  const password = await bcrypt.hash('1234', 10);
+  const password = await bcrypt.hash('12345', 10);
   const students = await Promise.all(
     [
       { name: 'Aryan Sharma', rollNumber: '21CS101', email: 'aryan@hostel.edu', room: '204', block: 'A' },
@@ -133,9 +133,9 @@ async function main() {
 
   console.log('\n🎉 Seeding complete!');
   console.log('\n📋 Login credentials:');
-  console.log('  Student: 21CS101 / 1234');
-  console.log('  Admin:   1234 / 1234');
-  console.log('  Gate:    1234 / 1234');
+  console.log('  Student: 21CS101 / 12345  (or any seeded roll number)');
+  console.log('  Admin:   12345 / 12345');
+  console.log('  Gate:    12345 / 12345');
 
   students.forEach((s) => {
     console.log(`  ${s.name}: QR Hash = ${s.qrCodeHash}`);
