@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import MealCard from '../components/MealCard';
 import useSocket from '../hooks/useSocket';
@@ -10,15 +9,10 @@ import { Utensils, SkipForward, Target, Leaf, CheckSquare, Square, Trophy, Activ
 const TABS = ["Today's Meals", 'My Stats', 'Menu Vote'];
 
 export default function StudentDashboard() {
-  const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [tab, setTab] = useState(0);
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!authLoading && (!user || user.role !== 'student')) navigate('/login');
-  }, [user, authLoading, navigate]);
 
   const fetchMeals = useCallback(async () => {
     try {
@@ -98,8 +92,6 @@ export default function StudentDashboard() {
     const h = new Date().getHours();
     return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
   };
-
-  if (authLoading) return null;
 
   return (
     <div className="min-h-screen">

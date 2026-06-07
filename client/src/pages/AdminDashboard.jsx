@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import CookingGuide from '../components/CookingGuide';
 import WasteChart from '../components/WasteChart';
@@ -18,16 +17,11 @@ const mealConfig = {
 };
 
 export default function AdminDashboard() {
-  const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [tab, setTab] = useState(0);
   const [dashboard, setDashboard] = useState(null);
   const [wasteData, setWasteData] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!authLoading && (!user || user.role !== 'admin')) navigate('/login');
-  }, [user, authLoading, navigate]);
 
   const fetchDashboard = useCallback(async () => {
     try {
@@ -86,8 +80,6 @@ export default function AdminDashboard() {
   const costSaved = totalSaved * 80;
   const mealsNotWasted = Math.round(totalSaved / 0.3);
   const co2Prevented = totalSaved * 2;
-
-  if (authLoading) return null;
 
   return (
     <div className="min-h-screen">

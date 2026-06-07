@@ -1,22 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import QRScanner from '../components/QRScanner';
 import api from '../utils/api';
 import { ScanLine, CheckCircle, XCircle, ArrowRight, Camera, Users, AlertTriangle, Zap } from 'lucide-react';
 
 export default function GateScanner() {
-  const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [result, setResult] = useState(null);
   const [meals, setMeals] = useState([]);
   const [selectedMeal, setSelectedMeal] = useState('');
   const [log, setLog] = useState([]);
-
-  useEffect(() => {
-    if (!authLoading && (!user || user.role !== 'gate')) navigate('/login');
-  }, [user, authLoading, navigate]);
 
   // Fetch today's meals for the dropdown - use admin endpoint with gate workaround
   // We'll re-use the same data flow
@@ -60,8 +54,6 @@ export default function GateScanner() {
     leftover_allowed: { label: 'Leftover Entry', Icon: Zap, color: 'text-accent', bg: 'bg-accent/10', border: 'border-l-accent' },
     error: { label: 'Error', Icon: AlertTriangle, color: 'text-danger', bg: 'bg-danger/10', border: 'border-l-danger' },
   };
-
-  if (authLoading) return null;
 
   const entryCount = log.filter((l) => l.status === 'allowed' || l.status === 'leftover_allowed').length;
   const redirectCount = log.filter((l) => l.status === 'redirect').length;
