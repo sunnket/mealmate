@@ -1,6 +1,6 @@
 {
   "name": "mealmate",
   "scripts": {
-    "build": "cd client && npm install && npm run build && cd .. && rm -rf public && cp -r client/dist public"
+    "build": "cd client && npm install --legacy-peer-deps && npm run build && cd .. && rm -rf public && cp -r client/dist public"
   }
 }
