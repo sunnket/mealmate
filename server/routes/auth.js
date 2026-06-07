@@ -47,11 +47,11 @@ router.post('/login', async (req, res) => {
     const { rollNumber, password, role } = req.body;
 
     // Admin / gate hardcoded credentials
-    if (role === 'admin' && rollNumber === 'admin' && password === 'admin1234') {
+    if (role === 'admin' && rollNumber === '1234' && password === '1234') {
       const token = jwt.sign({ id: 'admin', role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '7d' });
       return res.json({ token, user: { id: 'admin', role: 'admin', name: 'Admin' } });
     }
-    if (role === 'gate' && rollNumber === 'gate' && password === 'gate1234') {
+    if (role === 'gate' && rollNumber === '1234' && password === '1234') {
       const token = jwt.sign({ id: 'gate', role: 'gate' }, process.env.JWT_SECRET, { expiresIn: '7d' });
       return res.json({ token, user: { id: 'gate', role: 'gate', name: 'Gate Staff' } });
     }
